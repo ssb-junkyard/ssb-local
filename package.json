@@ -1,0 +1,23 @@
+{
+  "name": "ssb-local",
+  "version": "1.0.0",
+  "description": "secret-stack plugin for local multiserver address broadcast",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssbc/ssb-local.git"
+  },
+  "author": "SSBC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ssbc/ssb-local/issues"
+  },
+  "homepage": "https://github.com/ssbc/ssb-local#readme",
+  "dependencies": {
+    "broadcast-stream": "^0.2.2",
+    "ssb-ref": "^2.13.9"
+  }
+}
