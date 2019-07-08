@@ -72,6 +72,11 @@ module.exports = {
       return _status
     })
 
+    ssbServer.close.hook(function (fn, args) {
+      local.destroy()
+      return fn.apply(this, args)
+    })
+
     setImmediate(function () {
       // broadcast self
       var int = setInterval(function () {
