@@ -4,10 +4,6 @@ var ref = require('ssb-ref')
 // broadcasts the address:port:pubkey triple of the ssb server
 // on the LAN, using multicast UDP
 
-function isFunction (f) {
-  return 'function' === typeof f
-}
-
 function isEmpty (o) {
   for(var k in o)
     return false
@@ -62,15 +58,17 @@ module.exports = {
       }
     })
 
-    ssbServer.status.hook(function (fn) {
-      var _status = fn()
-      if(!isEmpty(addrs)) {
-        _status.local = {}
-        for(var k in addrs)
-          _status.local[k] = {address: addrs[k], seen: lastSeen[k]}
-      }
-      return _status
-    })
+    if (ssbServer.status) {
+      ssbServer.status.hook(function (fn) {
+        var _status = fn()
+        if(!isEmpty(addrs)) {
+          _status.local = {}
+          for(var k in addrs)
+            _status.local[k] = {address: addrs[k], seen: lastSeen[k]}
+        }
+        return _status
+      })
+    }
 
     var int
     ssbServer.close.hook(function (fn, args) {
