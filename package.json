@@ -4,7 +4,7 @@
   "description": "secret-stack plugin for local multiserver address broadcast",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/index.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,10 @@
   "dependencies": {
     "broadcast-stream": "^0.2.2",
     "ssb-ref": "^2.13.9"
+  },
+  "devDependencies": {
+    "secret-stack": "^6.3.1",
+    "ssb-caps": "^1.1.0",
+    "tape": "^4.11.0"
   }
 }

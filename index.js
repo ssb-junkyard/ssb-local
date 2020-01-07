@@ -4,10 +4,6 @@ var ref = require('ssb-ref')
 // broadcasts the address:port:pubkey triple of the ssb server
 // on the LAN, using multicast UDP
 
-function isFunction (f) {
-  return 'function' === typeof f
-}
-
 function isEmpty (o) {
   for(var k in o)
     return false
@@ -39,7 +35,7 @@ module.exports = {
     var lastSeen = {}
 
     // cleanup old local peers
-    setInterval(function () {
+    var iv = setInterval(function () {
       Object.keys(lastSeen).forEach((key) => {
         if (Date.now() - lastSeen[key] > 10e3) {
           ssbServer.gossip.remove(addrs[key])
@@ -62,19 +58,30 @@ module.exports = {
       }
     })
 
-    ssbServer.status.hook(function (fn) {
-      var _status = fn()
-      if(!isEmpty(addrs)) {
-        _status.local = {}
-        for(var k in addrs)
-          _status.local[k] = {address: addrs[k], seen: lastSeen[k]}
-      }
-      return _status
+    if (ssbServer.status) {
+      ssbServer.status.hook(function (fn) {
+        var _status = fn()
+        if(!isEmpty(addrs)) {
+          _status.local = {}
+          for(var k in addrs)
+            _status.local[k] = {address: addrs[k], seen: lastSeen[k]}
+        }
+        return _status
+      })
+    }
+
+    var int
+    ssbServer.close.hook(function (fn, args) {
+      // shut down intervals + close socket
+      clearInterval(int)
+      clearInterval(iv)
+      local.close()
+      return fn.apply(this, args)
     })
 
     setImmediate(function () {
       // broadcast self
-      var int = setInterval(function () {
+      int = setInterval(function () {
         if(config.gossip && config.gossip.local === false)
           return
         // TODO: sign beacons, so that receipient can be confidant
